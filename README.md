@@ -11,7 +11,7 @@
   - Redirectsを設定
     - デプロイ先にあわせる
     - 例： `http://localhost/login/discord/index.html`
-    - 例:  `http://example.com/login/discord/index.html`
+    - 例： `http://example.com/login/discord/index.html`
   - CLIENT IDをメモする
 - Botタブを開いて以下を実施
   - Build-A-Botで「Add Bot」をクリックしてBot作成
