@@ -21,48 +21,117 @@ app.get('/getLoginUrl', (req, res) => {
     res.send(JSON.stringify({ url }));
 });
 app.post('/checkUser', (req, res) => {
-    console.log('checkUser');
-    // console.log(req.body);
-    (0, checkUser_1.default)(req.body.token).then((info) => {
-        const response = {
-            type: 'checkUser',
-            data: info,
-        };
-        res.send(JSON.stringify(response));
-    });
+    checkUserInner(req, res);
 });
 app.post('/getAllUsers', (req, res) => {
+    getAllUsersInner(req, res);
+});
+app.post('/getRoleInfo', (req, res) => {
+    getRoleInfoInner(req, res);
+});
+app.post('/modifyUserRole', (req, res) => {
+    modifyUserRoleInner(req, res);
+});
+app.listen(config.port, () => {
+    console.log(`Start server. port: ${config.port}`);
+});
+let tokenList = [];
+const checkUserInnerInner = async (req) => {
+    const authHeader = req.get('Authorization');
+    const exist = tokenList.find((item) => item.token === authHeader);
+    if (!exist) {
+        //
+    }
+    else if (exist.expire < new Date().getTime()) {
+        // 期限切れ
+        tokenList = tokenList.filter((item) => item.token === authHeader);
+    }
+    else if (exist.expire > new Date().getTime()) {
+        console.log('キャッシュ再利用');
+        return exist.result;
+    }
+    console.log('所属チェック');
+    const info = await (0, checkUser_1.default)(authHeader);
+    const date = new Date();
+    date.setDate(date.getDate() + 1);
+    tokenList.push({
+        token: authHeader,
+        expire: date.getTime(),
+        result: info,
+    });
+    return info;
+};
+const checkUserInner = async (req, res) => {
+    console.log('checkUser');
+    const info = await checkUserInnerInner(req);
+    const response = {
+        type: 'checkUser',
+        data: info,
+    };
+    res.send(JSON.stringify(response));
+};
+const getAllUsersInner = async (req, res) => {
     console.log('getAllUsers');
-    (0, getAllUsers_1.default)().then((users) => {
+    try {
+        if ((await checkUserInnerInner(req)).status !== 'ok') {
+            throw new Error('認証エラー');
+        }
+        const users = await (0, getAllUsers_1.default)();
         const response = {
             type: 'getAllUsers',
             data: users,
         };
         res.send(JSON.stringify(response));
-    });
-});
-app.post('/getRoleInfo', (req, res) => {
+    }
+    catch (e) {
+        console.error(e);
+        res.status(500).send(JSON.stringify({
+            type: 'getAllUsers',
+            data: [],
+        }));
+    }
+};
+const getRoleInfoInner = async (req, res) => {
     console.log('getRoleInfo');
-    console.log(req.body);
-    (0, getRoleInfo_1.default)(req.body.roleId).then((info) => {
+    try {
+        if ((await checkUserInnerInner(req)).status !== 'ok') {
+            throw new Error('認証エラー');
+        }
+        console.log(req.body);
+        const info = await (0, getRoleInfo_1.default)(req.body.roleId);
         const response = {
             type: 'getRoleInfo',
             data: info,
         };
         res.send(JSON.stringify(response));
-    });
-});
-app.post('/modifyUserRole', (req, res) => {
+    }
+    catch (e) {
+        console.error(e);
+        res.status(500).send(JSON.stringify({
+            type: 'getAllUsers',
+            data: [],
+        }));
+    }
+};
+const modifyUserRoleInner = async (req, res) => {
     console.log('modifyUserRole');
-    (0, modifyUserRole_1.default)(req.body).then((info) => {
+    try {
+        if ((await checkUserInnerInner(req)).status !== 'ok') {
+            throw new Error('認証エラー');
+        }
+        const info = await (0, modifyUserRole_1.default)(req.body);
         const response = {
             type: 'modifyUserRole',
             data: info,
         };
         res.send(JSON.stringify(response));
-    });
-});
-app.listen(config.port, () => {
-    console.log(`Start server. port: ${config.port}`);
-});
+    }
+    catch (e) {
+        console.error(e);
+        res.status(500).send(JSON.stringify({
+            type: 'getAllUsers',
+            data: [],
+        }));
+    }
+};
 //# sourceMappingURL=index.js.map

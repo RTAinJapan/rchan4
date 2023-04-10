@@ -2,7 +2,9 @@
   "compilerOptions": {
     "outDir": "build",
     "module": "commonjs",
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "target": "esnext",
     "sourceMap": true,
     "allowJs": true,
@@ -13,8 +15,21 @@
     "esModuleInterop": true,
     "strict": true,
     "importHelpers": true,
-    "typeRoots": ["src/types", "node_modules/@types"]
+    "typeRoots": [
+      "src/types",
+      "node_modules/@types"
+    ]
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "build", "scripts", "acceptance-tests", "webpack", "jest", "src/setupTests.ts"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "scripts",
+    "acceptance-tests",
+    "webpack",
+    "jest",
+    "src/setupTests.ts"
+  ]
 }

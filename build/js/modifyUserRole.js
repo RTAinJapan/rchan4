@@ -86,7 +86,7 @@ const main = async (data) => {
         }
         return {
             result: 'ok',
-            message: `権限${mangementType}`,
+            message: `${roleName}の権限${mangementType}`,
             detail: execLog,
         };
     }

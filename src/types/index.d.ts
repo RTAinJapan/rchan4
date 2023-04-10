@@ -19,6 +19,7 @@ type Config = {
   port: number;
   wsport: number;
 };
+type PromiseType<T extends PromiseLike<any>> = T extends PromiseLike<infer P> ? P : never;
 
 type WSMessage = WSMessageUser | WSMessageGetAllUsers | WSMessageGetRoleInfo | WSMessageModifyUserRole;
 

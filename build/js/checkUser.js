@@ -37,7 +37,7 @@ const discordApi = async (api, token) => {
         console.log(url);
         const result = await axios_1.default.get(url, {
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `${token}`,
             },
         });
         if (result.status >= 400)

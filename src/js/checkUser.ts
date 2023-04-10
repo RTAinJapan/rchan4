@@ -2,7 +2,7 @@ import axios from 'axios';
 import configModule from 'config';
 const config: Config = configModule.util.toObject(configModule);
 
-const main = async (token: string) => {
+const main = async (token: string): Promise<{ status: 'ok' | 'ng'; message: string }> => {
   try {
     // 対象のサーバーに所属している自分の情報を取得
     const data: any = await discordApi(`/users/@me/guilds/${config.guildId}/member`, token);
@@ -37,7 +37,7 @@ const discordApi = async (api: string, token: string) => {
 
     const result = await axios.get(url, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `${token}`,
       },
     });
     if (result.status >= 400) throw new Error('status code error' + result.status);
