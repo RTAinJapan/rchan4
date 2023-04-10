@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>＼ﾌﾌｯﾋ／</title>
+  <link rel="stylesheet" href="./style.css" type="text/css">
+  <script src="./jquery.min.js"></script>
+</head>
+
+<body>
+  <h1></h1>
+  <div style="display: block;">
+    <div>
+      <input type="button" id="get_all_user" class="c-button" value="サーバー参加者の情報取得">
+    </div>
+    <hr />
+    <div>
+      <input type="button" id="get_role_info" class="c-button" value="ロール情報取得" />
+      <input type="text" id="role_id" placeholder="ロールのIDを入れてね" />
+
+    </div>
+    <hr />
+    <div>
+      <input type="button" id="modify_user_role" class="c-button" value="ロール情報変更" />
+      <span><input type="checkbox" id="modify_user_role_is_add" checked="true" />ON:権限追加 / OFF:権限削除</span>
+      <div>
+        <span id="role_info_text"></span>
+      </div>
+      <div>
+        <textarea type="text" id="modify_user_role_userIds" placeholder="ユーザIDを入れてね。改行区切り" rows="10"></textarea>
+      </div>
+    </div>
+    <hr />
+    <textarea type="text" id="results" rows="10" style="background-color: lightgray;" readonly>実行結果がここに出るよ</textarea>
+</body>
+
+<script type="text/javascript">
+  const hostname = location.hostname;
+  const sock = new WebSocket(`ws://${hostname}:443`);
+  var roleInfo = null;
+
+  sock.addEventListener('open', function (e) {// 接続
+    console.log('Socket 接続成功');
+  });
+
+  sock.addEventListener('message', function (e) {// サーバーからデータを受け取る
+    console.log(e.data);
+    const data = JSON.parse(e.data);
+    switch (data.type) {
+      case "getAllUsers": {
+        toggleDisable(false);
+        handleDownload(data.data, "members.csv", true);
+        break;
+      }
+      case "getRoleInfo": {
+        toggleDisable(false);
+        roleInfo = data.data;
+        $("#results").text(JSON.stringify(data.data, null, "  "));
+        if (!roleInfo || !roleInfo.id) {
+          $("#role_info_text").text(`なんかエラーがあったよ`);
+          roleInfo = null;
+        } else {
+          $("#role_info_text").text(`${roleInfo.id} ${roleInfo.name}`);
+        }
+        break;
+      }
+      case "modifyUserRole": {
+        toggleDisable(false);
+        $("#results").text(JSON.stringify(data.data, null, "  "));
+        break;
+      }
+    }
+  });
+
+  // サーバー参加者の情報取得
+  $("#get_all_user").on('click', () => {
+    toggleDisable(true);
+    const data = { type: "getAllUsers", data: "" };
+    sock.send(JSON.stringify(data));// WebSocketでサーバーに文字列を送信
+  });
+
+  // ロール情報取得
+  $("#get_role_info").on('click', () => {
+    const id = $("#role_id").val();
+    if (!id) {
+      alert("ロールのIDを入れてね！")
+      return;
+    }
+
+    toggleDisable(true);
+    const data = { type: "getRoleInfo", data: { roleId: id } };
+    sock.send(JSON.stringify(data));// WebSocketでサーバーに文字列を送信
+  });
+
+  // ロール情報付与
+  $("#modify_user_role").on('click', () => {
+    if (!roleInfo) {
+      alert("ロール情報を取得してね！");
+      return;
+    }
+    const roleId = roleInfo.id;
+
+    const isAddRole = $("#modify_user_role_is_add").prop("checked");
+
+    const userIds = $("#modify_user_role_userIds").val().split(/\n|\r/).map(item => item.trim()).filter(item => item);
+    if (!userIds || userIds.length === 0) {
+      alert("ロール変更対象のユーザIDを入れてね！");
+      return;
+    }
+    console.log(`modify_user_role\n role: ${roleId}, ${roleInfo.name}\n isAdd: ${isAddRole}`);
+
+    toggleDisable(true);
+    const data = { type: "modifyUserRole", data: { roleId: roleId, isAddRole: isAddRole, members: userIds } };
+    sock.send(JSON.stringify(data));// WebSocketでサーバーに文字列を送信
+  });
+
+  //------------------------------------
+
+  /** 
+   * Disable切り替え
+   * @param disabled {boolean}
+   */
+  const toggleDisable = (disabled) => {
+    $("input").attr("disabled", disabled);
+  }
+
+  /** 
+   * テキストファイルのダウンロード処理
+   * @param content {string} テキスト
+   * @param filename {string} ファイル名
+   * @param isAddBom {boolean} trueならBOMを付与する
+   */
+  const handleDownload = (content, filename, isAddBom) => {
+    const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+    const blobContent = isAddBom ? [bom, content] : [content];
+
+    const blob = new Blob(blobContent, { "type": "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    document.body.appendChild(a);
+    a.download = filename;
+    a.href = url;
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+</script>
+
+</html>

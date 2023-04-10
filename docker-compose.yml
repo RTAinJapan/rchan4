@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  rchan4:
+    image: pasta04/rchan4
+    container_name: rchan4
+    volumes:
+      - ./config:/usr/src/app/config
+    # environment:
+    #   - HOGE: 1234
+    restart: always
