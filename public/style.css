@@ -15,6 +15,7 @@ input {
   display: inline-block;
   text-align: start;
   margin: 0em;
+  cursor: pointer;
 }
 
 .c-button:disabled {
