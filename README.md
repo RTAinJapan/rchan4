@@ -5,7 +5,7 @@
 
 ## 下準備 1
 
-- Discordアプリケーションをサーバに登録
+- Discordアプリケーションを作成
   - https://discord.com/developers/applications
 - OAuth2タブを開いて以下を実施
   - Redirectsを設定
