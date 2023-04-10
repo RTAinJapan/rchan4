@@ -72,7 +72,7 @@ const main = async (data: { roleId: string; isAddRole: boolean; members: string[
     const execLog: string[] = [];
     for (const member of targetMember) {
       console.log(`"${member[1].id}", "${member[1].user.tag}"`);
-      execLog.push(`"${member[1].id}", "${member[1].user.tag}"`);
+      execLog.push(`${member[1].id}, ${member[1].user.tag}`);
       if (data.isAddRole) {
         await member[1].roles.add(role);
       } else {

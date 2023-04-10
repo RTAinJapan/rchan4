@@ -1,4 +1,8 @@
 type Config = {
+  clientId: string;
+  scope: string;
+  allowRoles: string[];
+
   /**
    * 操作対象のサーバID
    * @description サーバ名のところ右クリックしたらメニューが出てきて取得できる

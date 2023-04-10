@@ -17,6 +17,10 @@ input {
   margin: 0em;
 }
 
+.c-button:disabled {
+  background-color: gray;
+}
+
 textarea {
   color: black;
   width: 600px;

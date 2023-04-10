@@ -35,7 +35,7 @@ const main = async (roleId) => {
         // 権限の表示名を取得
         const role = guild.roles.cache.get(roleId);
         if (!role)
-            throw new Error('操作対象のサーバに指定した権限が存在しません。 roleId=' + roleId);
+            throw new Error('操作対象のサーバに指定した権限が存在しません。');
         // ログアウト
         client.destroy();
         return role;
@@ -43,10 +43,8 @@ const main = async (roleId) => {
     catch (error) {
         console.error('何かエラーがあった');
         console.error(error);
-        return {
-            message: error.message,
-        };
+        return {};
     }
 };
 exports.default = main;
-//# sourceMappingURL=getRoleInfo.js.map
+//# sourceMappingURL=getRoleInfo%20copy.js.map
