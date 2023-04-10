@@ -37,7 +37,7 @@ yarn
   "scope": "guilds.members.read%20guilds%20identify",
   "allowRoles": ["操作を許可するロールのID"],
   "guildId": "操作対象のサーバID",
-  "discordToken": "Discordの認証トークン。Configに無ければ環境変数 NODE_ENV_DISCORD_TOKEN を使用する",
+  "discordToken": "Discord botの認証トークン。Configに無ければ環境変数 NODE_ENV_DISCORD_TOKEN を使用する",
   "port": 待ち受けポート番号
 }
 ```
