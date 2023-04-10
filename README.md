@@ -5,23 +5,28 @@
 
 ## 下準備 1
 
-Discord botをサーバに登録
-(v12 から？bot の token じゃないとログインに失敗するようになった)
-
-- see: https://www.reddit.com/r/Discord_Bots/comments/7ttd58/get_missing_permissions_when_trying_to_add_a_role/dtf3ouh?utm_source=share&utm_medium=web2x&context=3
-
-## 下準備 2
-
 - Discordアプリケーションをサーバに登録
   - https://discord.com/developers/applications
-- OAuth2で、Redirectsを設定
-  - デプロイ先にあわせる
-  - 例： `http://localhost/login/discord/index.html`
-  - 例:  `http://example.com/login/discord/index.html`
-- OAuth2で、CLIENT IDを確認
+- OAuth2タブを開いて以下を実施
+  - Redirectsを設定
+    - デプロイ先にあわせる
+    - 例： `http://localhost/login/discord/index.html`
+    - 例:  `http://example.com/login/discord/index.html`
+  - CLIENT IDをメモする
+- Botタブを開いて以下を実施
+  - Build-A-Botで「Add Bot」をクリックしてBot作成
+  - TOKENを生成してメモする
+  - `SERVER MEMBERS INTENT` をオンにする
+- Discord botをサーバに登録
+  - OAuth2 -> URL Generatorで以下をチェック
+    - bot
+    - Manage Roles
+  - 生成されたURLでアクセスし、操作対象のサーバに招待する  
+  - Discordのサーバ設定で、追加されたbotのロールを、なるべく上の方に移動する
+    - botより上の位置に存在するロールは、botがいじれないため
 
-## 下準備 3 パッケージインストール
-- yarn入れてない人はnpm install
+## 下準備 2 パッケージインストール
+- yarn入れてない人は`npm install`
 
 ```shell
 yarn
@@ -43,12 +48,31 @@ yarn
 ```
 
 ## サーバー側実行
-
+- 起動したらあとはブラウザからアクセスする
 ```
 yarn start
 ```
 
-あとはブラウザからアクセスする
+### docker composeで起動
 
-## Todo
-- ユーザーのトークン使うんだし、ユーザーのトークンで権限つけ外しできるんじゃね
+必要なのは以下だけ。待ち受けポートは各環境に応じて修正。
+
+```
+config/default.json
+docker-compose.yml
+```
+
+## ビルド
+- ソースのビルド
+
+```
+yarn build
+```
+
+- Docker用のビルド
+  - 事前にpackage.jsonのユーザ名をいい感じにしておくこと
+
+```
+yarn docker:build
+yarn docker:push
+```
