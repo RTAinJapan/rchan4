@@ -1,11 +1,14 @@
-version: '3.8'
-
 services:
   rchan4:
-    image: pasta04/rchan4
+    image: ghcr.io/rtainjapan/rchan4:latest
     container_name: rchan4
-    volumes:
-      - ./config:/usr/src/app/config
+    environment:
+      - DISCORD_CLIENT_ID=
+      - DISCORD_SCOPE=
+      - DISCORD_ALLOW_ROLES=
+      - DISCORD_GUILD_ID=
+      - DISCORD_TOKEN=
+      - PORT=80
     restart: always
     # 外向けのポート:中のポート
     ports:

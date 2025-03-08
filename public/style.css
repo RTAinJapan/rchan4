@@ -28,3 +28,7 @@ textarea {
   padding: 20px;
   font-size: large;
 }
+
+#role_info_text {
+  font-size: x-large;
+}

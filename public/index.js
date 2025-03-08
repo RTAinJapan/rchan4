@@ -62,7 +62,7 @@ $('#get_role_info').on('click', () => {
         $('#role_info_text').text(``);
         roleInfo = null;
       } else {
-        $('#role_info_text').text(`${roleInfo.id} ${roleInfo.name}`);
+        $('#role_info_text').text(`ロール付与対象：${roleInfo.id} ${roleInfo.name}`);
       }
     })
     .finally(() => {

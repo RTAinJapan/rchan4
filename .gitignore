@@ -63,4 +63,5 @@ typings/
 
 *.csv
 
-config/*
+build
+docker-compose_prod.yml
