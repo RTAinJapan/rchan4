@@ -21,58 +21,47 @@
   - OAuth2 -> URL Generatorで以下をチェック
     - bot
     - Manage Roles
-  - 生成されたURLでアクセスし、操作対象のサーバに招待する  
+  - 生成されたURLでアクセスし、操作対象のサーバに招待する
   - Discordのサーバ設定で、追加されたbotのロールを、なるべく上の方に移動する
     - botより上の位置に存在するロールは、botがいじれないため
 
 ## 下準備 2 パッケージインストール
-- yarn入れてない人は`npm install`
 
 ```shell
-yarn
+npm install
 ```
 
 ## 下準備 3 設定ファイル作る
 
-`config/default.json`に以下を適宜設定
+- 環境変数に以下を設定
 
-```json
-{
-  "clientId": "Discord ApplicationのOAuth2のClient ID",
-  "scope": "guilds.members.read%20guilds%20identify",
-  "allowRoles": ["操作を許可するロールのID"],
-  "guildId": "操作対象のサーバID",
-  "discordToken": "Discord botの認証トークン。Configに無ければ環境変数 NODE_ENV_DISCORD_TOKEN を使用する",
-  "port": 待ち受けポート番号
-}
+```
+DISCORD_CLIENT_ID=Discord ApplicationのOAuth2のClient ID
+DISCORD_SCOPE=guilds.members.read%20guilds%20identify
+DISCORD_ALLOW_ROLES=操作を許可するロールのID。複数ある場合はカンマ区切り
+DISCORD_GUILD_ID=操作対象のサーバID
+DISCORD_TOKEN=Discord botの認証トークン
+PORT=待ち受けポート番号
 ```
 
-## サーバー側実行
+## ビルド
+
+- ソースのビルド
+
+```shell
+npm run build
+```
+
+## 実行
+
 - 起動したらあとはブラウザからアクセスする
-```
-yarn start
+
+```shell
+npm run start
 ```
 
 ### docker composeで起動
 
-必要なのは以下だけ。待ち受けポートは各環境に応じて修正。
-
-```
-config/default.json
-docker-compose.yml
-```
-
-## ビルド
-- ソースのビルド
-
-```
-yarn build
-```
-
-- Docker用のビルド
-  - 事前にpackage.jsonのユーザ名をいい感じにしておくこと
-
-```
-yarn docker:build
-yarn docker:push
+```shell
+docker compose up
 ```
