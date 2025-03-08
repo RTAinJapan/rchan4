@@ -1,8 +1,5 @@
 import express from 'express';
-
-import configModule from 'config';
-const config: Config = configModule.util.toObject(configModule);
-
+import config from './config';
 import checkUser from './checkUser';
 import getAllUsers from './getAllUsers';
 import getRoleInfo from './getRoleInfo';
@@ -106,7 +103,7 @@ const getAllUsersInner = async (req, res) => {
       JSON.stringify({
         type: 'getAllUsers',
         data: [],
-      })
+      }),
     );
   }
 };
@@ -132,7 +129,7 @@ const getRoleInfoInner = async (req, res) => {
       JSON.stringify({
         type: 'getAllUsers',
         data: [],
-      })
+      }),
     );
   }
 };
@@ -156,7 +153,7 @@ const modifyUserRoleInner = async (req, res) => {
       JSON.stringify({
         type: 'getAllUsers',
         data: [],
-      })
+      }),
     );
   }
 };

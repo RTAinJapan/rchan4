@@ -1,15 +1,9 @@
 import Discord from 'discord.js';
-import configModule from 'config';
-const config: Config = configModule.util.toObject(configModule);
+import config from './config';
 
 const main = async (data: { roleId: string; isAddRole: boolean; members: string[] }) => {
   try {
     const members = data.members;
-
-    //  Discordのトークン取得
-    const token = config.discordToken ? config.discordToken : process.env.NODE_ENV_DISCORD_TOKEN;
-    if (!token) throw new Error('Discord認証トークンが指定されていません。');
-
     if (members.length === 0) throw new Error('権限付与対象のメンバーが指定されていません。');
 
     // Discordログイン
@@ -17,7 +11,7 @@ const main = async (data: { roleId: string; isAddRole: boolean; members: string[
     const client = new Discord.Client({
       intents: [Discord.GatewayIntentBits.Guilds, Discord.GatewayIntentBits.GuildMembers],
     });
-    await client.login(token);
+    await client.login(config.discordToken);
     if (!client.user) throw new Error('ログインに失敗しました。');
 
     // 何か裏でいろいろしてるので準備完了を待つ
